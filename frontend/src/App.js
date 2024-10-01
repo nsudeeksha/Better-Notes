@@ -1,49 +1,78 @@
-import logo from './logo.svg';
 import React, { useState } from 'react';
-import { Flex, Text, Button, Heading, Box } from '@radix-ui/themes';
-
+import * as Dialog from '@radix-ui/react-dialog';
+import './App.css';
 
 function App() {
-  const [file, setFile] = useState(null);
-  const [notes, setNotes] = useState("");
+  const [notes, setNotes] = useState('');
+  const [result, setResult] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(''); // Added error state
 
-  // Handle file input changes
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-  };
-
-  // Handle notes input changes
-  const handleNotesChange = (event) => {
-    setNotes(event.target.value);
-  };
-
-  // Simulate form submission
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log("File uploaded:", file);
-    console.log("Notes:", notes);
+  const handleSubmit = () => {
+    setLoading(true);
+    fetch('http://127.0.0.1:8001/process/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'text/html',
+      },
+      body: JSON.stringify({ notes }),
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        setResult(data); // data is the HTML string
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        setError('An error occurred while processing your notes.'); // Set error message
+        setLoading(false);
+      });
   };
 
   return (
-    <div>
-      <Flex gapX = "4" justify="center">
-        <Box>
-          <Heading size = "9" color="iris" align="center"> Better Notes </Heading>
-        </Box>
-      </Flex>
-      <Flex gap = "4"  justify="center">
-        <Box>
-          <form onSubmit={handleSubmit}>
-          <input type="file" onChange={handleFileChange} />
-          </form>
-        </Box>
-        <Box>
-          <form onSubmit={handleSubmit}>
-          <input type="text" placeholder="Notes" onChange={handleNotesChange} />
-          <Button variant="soft"> Submit </Button>
-          </form>
-        </Box>
-      </Flex>
+    <div className="App">
+      <h1>Notes Processor</h1>
+      <textarea
+        placeholder="Enter your notes here..."
+        value={notes}
+        onChange={(e) => setNotes(e.target.value)}
+        style={{ width: '400px', height: '200px', padding: '10px', fontSize: '16px' }}
+      />
+      <br />
+      <button onClick={handleSubmit} className="submit-button">
+        Submit
+      </button>
+
+      <Dialog.Root open={loading}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="DialogOverlay" />
+          <Dialog.Content className="DialogContent">
+            <Dialog.Title className="DialogTitle">Loading</Dialog.Title>
+            <Dialog.Description className="DialogDescription">
+              Please wait while we process your notes...
+            </Dialog.Description>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+
+      {result && (
+        <div className="result" dangerouslySetInnerHTML={{ __html: result }} />
+      )}
+
+      {/* Error dialog */}
+      <Dialog.Root open={!!error} onOpenChange={() => setError('')}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="DialogOverlay" />
+          <Dialog.Content className="DialogContent">
+            <Dialog.Title className="DialogTitle">Error</Dialog.Title>
+            <Dialog.Description className="DialogDescription">
+              {error}
+            </Dialog.Description>
+            <button onClick={() => setError('')}>Close</button>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </div>
   );
 }

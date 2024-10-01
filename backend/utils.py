@@ -50,7 +50,7 @@ def enhance_notes_with_gpt(notes, relevant_chunks):
         response = client.chat.completions.create(
             model="gpt-4",
             messages=[
-                {"role": "system", "content": "You are an assistant that helps improve the clarity and coherence of notes. Try not to over write."},
+                {"role": "system", "content": "You are an assistant that helps improve the clarity and coherence of notes. Try not to over write. Generate the notes in an aesthetically-pleasing HTML format"},
                 {"role": "user", "content": prompt}
             ],
             max_tokens=1000,

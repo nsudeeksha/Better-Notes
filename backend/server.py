@@ -5,6 +5,7 @@ from utils import extract_text_from_pdf, get_embedding, search_relevant_chunks, 
 import markdown2
 from dotenv import load_dotenv
 import os
+from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 pinecone_key = os.getenv('pinecone_key')
@@ -12,6 +13,14 @@ pinecone_key = os.getenv('pinecone_key')
 
 # FastAPI app
 app = FastAPI()
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # You can specify specific origins instead of "*"
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Initialize OpenAI and Pinecone
 pc = Pinecone(api_key=pinecone_key)
@@ -52,7 +61,4 @@ async def process_notes(request: NotesRequest):
     # Step 2: Use GPT-4 to enhance the notes
     enhanced_notes = enhance_notes_with_gpt(notes, relevant_chunks)
 
-    # Step 3: Convert to Markdown
-    markdown_notes = markdown2.markdown(enhanced_notes)
-
-    return {"enhanced_notes_markdown": markdown_notes}
+    return enhanced_notes

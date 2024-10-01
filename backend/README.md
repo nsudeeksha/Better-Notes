@@ -1,3 +1,6 @@
+ pip install -r requirements.txt 
+ make .env
+
  uvicorn server:app --reload --port 8001
 
  curl -X 'POST' \

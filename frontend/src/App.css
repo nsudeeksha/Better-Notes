@@ -1,0 +1,86 @@
+.App {
+    text-align: center;
+    padding: 40px;
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    min-height: 100vh;
+}
+
+h1 {
+    color: #333;
+}
+
+textarea {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+.submit-button {
+    background-color: #4caf50;
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    margin-top: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.submit-button:hover {
+    background-color: #45a049;
+}
+
+.DialogOverlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    inset: 0;
+}
+
+.DialogContent {
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0px 10px 38px -10px rgba(0, 0, 0, 0.35),
+        0px 10px 20px -15px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 25px;
+    width: 90vw;
+    max-width: 450px;
+}
+
+.DialogTitle {
+    margin: 0;
+    font-weight: bold;
+    font-size: 18px;
+    color: #333;
+}
+
+.DialogDescription {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #555;
+}
+
+.result {
+    margin-top: 30px;
+    text-align: left;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.result ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.result li {
+    margin-bottom: 10px;
+}
+
+.result p {
+    margin: 0;
+}
